@@ -20,6 +20,7 @@ describe('实现一个基类，可以继承，可以监听事件', function () {
     it('能够监听事件并传值', function (done) {
       const view = new View
       view.on('test', function (value) {
+        
         assert.equal(value, 'hello world')
         done()
       })
@@ -41,6 +42,7 @@ describe('实现一个基类，可以继承，可以监听事件', function () {
     var View = Base.extend()
 
     it('可以extend一个类', function () {
+
       var MyClass = Base.extend({
         getVal: function () {
           return 'hello world'
@@ -50,6 +52,7 @@ describe('实现一个基类，可以继承，可以监听事件', function () {
           return word
         }
       })
+      
       var myclass = new MyClass
       assert.equal(myclass.getVal(), 'hello world')
       assert.equal(MyClass.say('haha'), 'haha')
