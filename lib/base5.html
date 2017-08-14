@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function Base() {
+            this.events = {};
+        }
+
+        Base.prototype.on = function(eventName, fn) {
+
+            if (!Object.prototype.toString.call(fn) == '[object Function]') {
+                throw new Error('绑定的事件类型不是函数')
+            }
+            (this.events[eventName] = this.events[eventName] || []).push(fn)
+        }
+
+        Base.prototype.trigger = function(eventName, value) {
+            if (!this.events[eventName]) {
+                return this;
+            }
+            var that = this
+            this.events[eventName].forEach(function(fn) {
+                fn.call(that, value)
+            });
+        }
+
+        Base.extend = function(Class, static) {
+            var options = Array.prototype.slice.call(arguments);
+
+            var O = function() {
+                Base.call(this)
+            };
+            O.prototype = Base.prototype;
+
+            for (var n = 0; n < options.length; n++) {
+                var item = options[n] || {};
+                for (var k in item) {
+                    console.log('item', k, item[k]);
+                    O.prototype[k] = item[k]
+                }
+
+            }
+            return O;
+        }
+
+        var MyClass = Base.extend({
+            getVal: function() {
+                return 'hello world'
+            }
+        }, {
+            say: function(word) {
+                return word
+            }
+        })
+        console.log(MyClass);
+        var myclass = new MyClass
+        console.log(myclass);
+        console.log(myclass.getVal())
+        console.log(MyClass.say());
+    </script>
+
+</body>
+
+</html>
