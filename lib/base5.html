@@ -31,24 +31,42 @@
                 fn.call(that, value)
             });
         }
+        
+        function isObject (obj) {
+            if (Object.prototype.toString.call(obj) == '[object Object]') return true;
+            return false;
+        }
+        
+        merge({name: 123}, {age: 13});
 
-        Base.extend = function(Class, static) {
-            var options = Array.prototype.slice.call(arguments);
+        function merge () {
+            var target = arguments[0] || {};
+            var len = arguments.length;
 
-            var O = function() {
-                Base.call(this)
-            };
-            O.prototype = Base.prototype;
-
-            for (var n = 0; n < options.length; n++) {
-                var item = options[n] || {};
-                for (var k in item) {
-                    console.log('item', k, item[k]);
-                    O.prototype[k] = item[k]
+            // 只传递一个参数
+            if (len == 1) return target;
+           
+            for(var i = 1; i < len; i++) {
+                var nextObj = arguments[i];
+                
+                for(var k  in nextObj) {  //浅拷贝
+                    target[k] = nextObj[k];
                 }
-
             }
-            return O;
+            return target;
+        }
+
+        Base.extend = function (prototype, static) {
+            var Super = this;
+
+            function S() {}
+            S.prototype = Super.prototype
+            
+            function Klass() {
+                Super.call(this)
+            }
+            Klass.prototype = merge(new S, prototype)
+            return merge(merge(Klass, Base), static);
         }
 
         var MyClass = Base.extend({
@@ -60,11 +78,7 @@
                 return word
             }
         })
-        console.log(MyClass);
         var myclass = new MyClass
-        console.log(myclass);
-        console.log(myclass.getVal())
-        console.log(MyClass.say());
     </script>
 
 </body>
