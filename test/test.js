@@ -60,7 +60,7 @@ describe('实现一个基类，可以继承，可以监听事件', function() {
             assert.equal(myclass instanceof MyClass, true)
             assert.equal(myclass instanceof Base, true)
         })
-
+        // extend的
         it('可以extend多次', function() {
             var A = Base.extend({
                 say: function(word) {
